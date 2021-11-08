@@ -1,41 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 const correctNumber = 1234;
 
 function App() {
-  const [calc, setCalc] = useState('')
-  const [display, setDisplay] = useState('')
-  const [disabled, setDisabled] = useState(false)
-  const [numberOfTry, setNumberOfTry] = useState(1)
+  const [calc, setCalc] = useState('');
+  const [display, setDisplay] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const [numberOfTry, setNumberOfTry] = useState(1);
+  const [disableClear, setDisableClear] = useState(false);
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
-useEffect (() => {
-  if(numberOfTry % 3){
-  const timer = setTimeout(() => setDisabled(true), 3000)
-  return clearTimeout(timer);
-}})
 
-console.log(calc)
-/*
-const freeze = () => {
-  if(numberOfTry == 3){
-    setDisabled(!disabled);
-  }
-}*/
-/*
-useEffect(() => {
-  if(numberOfTry == 3){
-    setTimeout(()=> {
-      setDisabled(!disabled);
-    }), 3000;
-    numberOfTry=0;
-  }})
-*/
+
 
 
   const updateDigits = value => {
     setCalc(calc + value)
     setDisplay(display + '*')
+    if(calc.length === 3){
+      setDisableSubmit(false);
+    }else{
+      setDisableSubmit(true)
+    }
+    
   }
 
   const createDigits = () => {
@@ -58,10 +46,20 @@ useEffect(() => {
       setNumberOfTry(1)
       
     }else {
-      setDisplay('ERROR')
-      setNumberOfTry(numberOfTry + 1)
-      console.log(numberOfTry)
+      setDisabled(true);
+      setDisplay('ERROR');
+      setNumberOfTry(numberOfTry + 1);
+      console.log(numberOfTry);
      
+    }
+    if(numberOfTry == 3 && correctNumber != calc){
+      setDisabled(true)
+      setDisableClear(true);
+      setDisplay("LOCKED")
+      setTimeout(() => setDisabled(false), 30000);
+      setTimeout(() => setDisableClear(false), 30000);
+      setTimeout(() => setDisplay(''), 30000)
+      return  setNumberOfTry(1);
     }
     
   }
@@ -69,6 +67,7 @@ useEffect(() => {
   const clear = () => {
     setDisplay('');
     setCalc('');
+    setDisabled(false);
   }
 
   return (
@@ -81,9 +80,9 @@ useEffect(() => {
           { createDigits() }
           </div>
           <div className='options'>
-            <button onClick={clear}>Clear</button>
-            <button onClick={() => updateDigits('0')}>0</button>
-            <button onClick={checkNumbers}>Enter</button>
+            <button disabled={disableClear} onClick={clear}>Clear</button>
+            <button disabled={disabled} onClick={() => updateDigits('0') }>0</button>
+            <button disabled={disableSubmit} onClick={checkNumbers}>Enter</button>
           </div>
       </div>
     </div>
