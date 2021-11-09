@@ -11,21 +11,6 @@ function App() {
   const [disableClear, setDisableClear] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(true);
 
-
-
-
-
-  const updateDigits = value => {
-    setCalc(calc + value)
-    setDisplay(display + '*')
-    if(calc.length === 3){
-      setDisableSubmit(false);
-    }else{
-      setDisableSubmit(true)
-    }
-    
-  }
-
   const createDigits = () => {
     const digits = []
 
@@ -38,6 +23,22 @@ function App() {
     return digits;
   }
 
+
+
+  const updateDigits = value => {
+    
+    if(calc.length == 3){
+      console.log(calc.length)
+      setDisableSubmit(false);
+      setDisabled(true)
+      
+    }
+    setCalc(calc + value)
+    setDisplay(display + '*')
+  }
+
+
+
   const checkNumbers = () => {
     
 
@@ -49,7 +50,7 @@ function App() {
       setDisabled(true);
       setDisplay('ERROR');
       setNumberOfTry(numberOfTry + 1);
-      console.log(numberOfTry);
+      
      
     }
     if(numberOfTry == 3 && correctNumber != calc){
@@ -58,10 +59,12 @@ function App() {
       setDisplay("LOCKED")
       setTimeout(() => setDisabled(false), 30000);
       setTimeout(() => setDisableClear(false), 30000);
-      setTimeout(() => setDisplay(''), 30000)
+      setTimeout(() => setDisplay(''), 30000);
+      setCalc('');
       return  setNumberOfTry(1);
     }
-    
+  
+
   }
 
   const clear = () => {
